@@ -8,10 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260419">
+  <link rel="stylesheet" href="styles.css?v=20260419b">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
-  <script src="app.js?v=20260419" defer></script>
+  <script src="app.js?v=20260419b" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -36,7 +36,7 @@
     <div class="caption">账户余额 · 虚线为初始余额 · 含全部已结算信号</div>
   </section>
 
-  <section>
+  <section id="statsSection">
     <div class="stats-row" id="statsRow"></div>
   </section>
 
@@ -45,16 +45,18 @@
       完整原始数据：<a href="https://github.com/NegentropyLab/test/blob/main/track_record.csv" target="_blank" rel="noopener">查看 track_record.csv ↗</a>
     </div>
     <div id="loading" class="loading">正在读取 track_record.csv…</div>
+    <div class="table-scroll">
     <table class="record-table" id="recordTable" style="display:none">
       <thead>
         <tr>
-          <th class="num">序号</th>
-          <th>日期</th>
+          <th class="num">编号</th>
+          <th>比赛时间</th>
           <th>联赛</th>
-          <th>赛事</th>
+          <th>主队</th>
+          <th class="num">HDP</th>
+          <th>客队</th>
           <th class="num">比分</th>
           <th>信号</th>
-          <th>盘口</th>
           <th class="num">下注资金</th>
           <th class="num">赔率</th>
           <th>赛果</th>
@@ -65,6 +67,7 @@
       </thead>
       <tbody id="recordBody"></tbody>
     </table>
+    </div>
     <button class="load-more" id="loadMore" style="display:none">加载更多</button>
   </section>
 

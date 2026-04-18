@@ -4,16 +4,15 @@ const ARCHIVED = false;
 const ARCHIVED_DATE = null; // Set to 'YYYY-MM-DD' when archiving
 
 const SAMPLE_STAGES = {
-  0:    ['total_signals'],
-  100:  ['total_signals', 'win_rate', 'roi', 'avg_odds'],
-  500:  ['total_signals', 'win_rate', 'roi', 'avg_odds', 'profit_factor', 'max_drawdown', 'longest_streak'],
+  0:    [],
+  100:  ['win_rate', 'roi', 'avg_odds'],
+  500:  ['win_rate', 'roi', 'avg_odds', 'profit_factor', 'max_drawdown', 'longest_streak'],
   1000: 'all'
 };
 
-const ALL_STATS = ['total_signals', 'win_rate', 'roi', 'avg_odds', 'profit_factor', 'max_drawdown', 'longest_streak'];
+const ALL_STATS = ['win_rate', 'roi', 'avg_odds', 'profit_factor', 'max_drawdown', 'longest_streak'];
 
 const STAT_LABELS = {
-  total_signals:  '累计信号',
   win_rate:       '胜率',
   roi:            'ROI',
   avg_odds:       '平均赔率',
@@ -76,6 +75,7 @@ function normalizeRow(r) {
     homeScore:   r['主队比分'],
     awayScore:   r['客队比分'],
     handicap:    r['盘口'],
+    hdp:         r['HDP'],
     signalSide:  side,
     odds:        odds == null || isNaN(odds) ? null : odds,
     result:      r['赛果'] == null ? '' : String(r['赛果']).trim(),
@@ -269,6 +269,7 @@ function computeMetrics(settled) {
 
 function renderStats(settled) {
   const el = document.getElementById('statsRow');
+  const section = document.getElementById('statsSection');
   if (!el) return;
 
   const metrics = computeMetrics(settled);
@@ -279,6 +280,13 @@ function renderStats(settled) {
     if (n >= k) visible = SAMPLE_STAGES[k];
   });
   if (visible === 'all') visible = ALL_STATS;
+
+  if (!visible || visible.length === 0) {
+    el.innerHTML = '';
+    if (section) section.style.display = 'none';
+    return;
+  }
+  if (section) section.style.display = '';
 
   el.innerHTML = visible.map(key => `
     <div class="stat">
@@ -322,7 +330,7 @@ function paintRows() {
   const tbody = document.getElementById('recordBody');
   const btn = document.getElementById('loadMore');
   tbody.innerHTML = SORTED_ROWS.slice(0, DISPLAY_COUNT).map(r => {
-    const dateStr = formatDateOnly(parseTs(r.matchTime) || parseTs(r.signalTime));
+    const matchTimeStr = formatDateTime(parseTs(r.matchTime)) || '';
     const score = (r.homeScore !== undefined && r.homeScore !== null && r.homeScore !== ''
                 && r.awayScore !== undefined && r.awayScore !== null && r.awayScore !== '')
       ? `${r.homeScore}–${r.awayScore}` : '—';
@@ -331,6 +339,7 @@ function paintRows() {
     const pnlStr = isNaN(r.pnl) ? '—' : signed(r.pnl, 2);
     const balStr = isNaN(r.balance) ? '—' : r.balance.toFixed(2);
     const oddsStr = r.odds != null ? r.odds.toFixed(2) : '—';
+    const hdpStr = (r.hdp === null || r.hdp === undefined || r.hdp === '') ? '—' : r.hdp;
     const stakeNum = isNaN(r.stake) ? '—' : r.stake.toFixed(2);
     const stakeStr = r.stakeRatio
       ? `<div>${stakeNum}</div><div class="ratio">${escapeHtml(r.stakeRatio)}</div>`
@@ -342,12 +351,13 @@ function paintRows() {
       : '';
     return `<tr>
       <td class="num">${r.signalId ?? ''}</td>
-      <td class="text">${escapeHtml(dateStr)}</td>
+      <td class="text">${escapeHtml(matchTimeStr)}</td>
       <td class="text">${escapeHtml(r.league ?? '')}</td>
-      <td class="text">${escapeHtml(r.home ?? '')}<span class="vs">vs</span>${escapeHtml(r.away ?? '')}</td>
+      <td class="text">${escapeHtml(r.home ?? '')}</td>
+      <td class="num">${escapeHtml(String(hdpStr))}</td>
+      <td class="text">${escapeHtml(r.away ?? '')}</td>
       <td class="num">${escapeHtml(score)}</td>
       <td class="text">${side}</td>
-      <td class="text">${escapeHtml(r.handicap ?? '')}</td>
       <td class="num">${stakeStr}</td>
       <td class="num">${oddsStr}</td>
       <td class="text">${resultLetter}</td>
