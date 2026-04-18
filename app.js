@@ -82,6 +82,7 @@ function normalizeRow(r) {
     pnl:         parseFloat(r['盈亏']),
     balance:     parseFloat(r['余额']),
     stake:       parseFloat(r['下注资金']),
+    stakeRatio:  r['投注比例'] == null ? '' : String(r['投注比例']).trim(),
     sourceFile:  r['源文件'],
     zipUrl:      r['存证文件URL']
   };
@@ -333,7 +334,10 @@ function paintRows() {
     const pnlStr = isNaN(r.pnl) ? '—' : signed(r.pnl, 2);
     const balStr = isNaN(r.balance) ? '—' : r.balance.toFixed(2);
     const oddsStr = r.odds != null ? r.odds.toFixed(2) : '—';
-    const stakeStr = isNaN(r.stake) ? '—' : r.stake.toFixed(2);
+    const stakeNum = isNaN(r.stake) ? '—' : r.stake.toFixed(2);
+    const stakeStr = r.stakeRatio
+      ? `${stakeNum}<span class="ratio">${escapeHtml(r.stakeRatio)}</span>`
+      : stakeNum;
     const zipFile = r.sourceFile ? String(r.sourceFile).replace(/\.csv$/i, '.zip') : '';
     const archiveUrl = zipFile ? `./csv/${zipFile}` : '';
     const zipLink = archiveUrl

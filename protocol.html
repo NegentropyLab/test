@@ -47,7 +47,7 @@
 
     <ol class="invariants">
       <li><strong>信号序号连续。</strong>每条信号分配严格递增的整数序号，不可跳号、不可复用、不可重排。</li>
-      <li><strong>数量对应。</strong>track_record.csv 中的每一行都引用 <code>/csv</code> 目录下一个真实存在的 zip 文件；<code>/csv</code> 目录下的每一个 zip 文件都被 track_record.csv 中至少一行引用。不存在"孤儿"——没有记录却无文件，也没有文件却未被记录。</li>
+      <li><strong>数量对应。</strong>track_record.csv 中的每一行都引用 <code>/csv</code> 目录下一个真实存在的 zip 文件；<code>/csv</code> 目录下的每一个 zip 文件都被 track_record.csv 中至少一行引用。不存在"孤儿"——不会有记录却无文件，也不会有文件却未被记录。</li>
       <li><strong>周期快照。</strong>每月末提交一次累计快照文件至 <code>/snapshots</code> 目录，内含截至当时的全部计数与指标。快照文件一经提交即不再修改；其内容与未来任一时点 track_record.csv 中截至同一时间的累计数据必须吻合。</li>
       <li><strong>赔率可核验。</strong>信号生成时刻所记录的皇冠赔率，可在第三方赔率历史数据库中独立核验。</li>
       <li><strong>无事后过滤。</strong>模型产生的每一条信号都被录入档案。信号一经生成并 commit，不会因任何事后信息（包括市场波动、比赛过程、赛果）被从档案中撤除。</li>

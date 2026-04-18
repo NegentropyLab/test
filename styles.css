@@ -182,6 +182,7 @@ p { margin-bottom: 24px; }
 .record-table td.link a { color: var(--text-secondary); }
 .record-table td.link a:hover { color: var(--text); }
 .record-table td .vs { color: var(--text-secondary); margin: 0 4px; }
+.record-table td .ratio { color: var(--text-secondary); font-size: 0.85em; margin-left: 6px; }
 
 .load-more {
   display: block;
