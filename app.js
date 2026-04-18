@@ -13,13 +13,13 @@ const SAMPLE_STAGES = {
 const ALL_STATS = ['total_signals', 'win_rate', 'roi', 'avg_odds', 'profit_factor', 'max_drawdown', 'longest_streak'];
 
 const STAT_LABELS = {
-  total_signals:  'Total signals',
-  win_rate:       'Win rate',
+  total_signals:  '累计信号',
+  win_rate:       '胜率',
   roi:            'ROI',
-  avg_odds:       'Avg odds',
-  profit_factor:  'Profit factor',
-  max_drawdown:   'Max drawdown',
-  longest_streak: 'Longest streak'
+  avg_odds:       '平均赔率',
+  profit_factor:  '盈利因子',
+  max_drawdown:   '最大回撤',
+  longest_streak: '最长连胜'
 };
 
 const CSV_PATH = './track_record.csv';
@@ -38,7 +38,7 @@ async function main() {
     if (!resp.ok) throw new Error('fetch failed: ' + resp.status);
     csvText = await resp.text();
   } catch (e) {
-    setLoadingMsg('Unable to load track_record.csv');
+    setLoadingMsg('无法读取 track_record.csv');
     return;
   }
 
@@ -52,7 +52,7 @@ async function main() {
   const settled = ALL_ROWS.filter(r => r.result && r.result.length > 0 && !isNaN(r.pnl));
 
   if (ALL_ROWS.length === 0) {
-    setLoadingMsg('No records yet');
+    setLoadingMsg('暂无记录');
     return;
   }
 
@@ -91,7 +91,7 @@ function renderArchiveBanner() {
   if (!ARCHIVED) return;
   const banner = document.createElement('div');
   banner.className = 'archive-banner';
-  banner.textContent = `This archive was closed on ${ARCHIVED_DATE} and is preserved as-is.`;
+  banner.textContent = `本档案已于 ${ARCHIVED_DATE} 封存，内容保持原样。`;
   document.body.insertBefore(banner, document.body.firstChild);
 }
 
@@ -114,9 +114,9 @@ function renderStateLine(rows) {
   const lastText = lastDate ? formatDateTime(lastDate) : '—';
 
   el.innerHTML = `
-    <div class="state-item"><span class="state-label">Running</span><span class="state-divider">·</span><span class="state-value">Day ${dayNum}</span></div>
-    <div class="state-item"><span class="state-label">Signals</span><span class="state-divider">·</span><span class="state-value">${rows.length}</span></div>
-    <div class="state-item"><span class="state-label">Last updated</span><span class="state-divider">·</span><span class="state-value">${lastText} UTC+8</span></div>
+    <div class="state-item"><span class="state-label">运行</span><span class="state-value">${dayNum} 天</span></div>
+    <div class="state-item"><span class="state-label">信号</span><span class="state-value">${rows.length} 条</span></div>
+    <div class="state-item"><span class="state-label">更新于</span><span class="state-value">${lastText}</span></div>
   `;
 }
 
@@ -186,7 +186,7 @@ function renderEquityCurve(settled) {
           padding: 10,
           displayColors: false,
           callbacks: {
-            label: (ctx) => (ctx.raw >= 0 ? '+' : '') + ctx.raw.toFixed(2) + ' units'
+            label: (ctx) => (ctx.raw >= 0 ? '+' : '') + ctx.raw.toFixed(2) + ' 单位'
           }
         }
       },
@@ -376,7 +376,7 @@ function paintRows() {
     const score = (r.homeScore !== undefined && r.homeScore !== null && r.homeScore !== ''
                 && r.awayScore !== undefined && r.awayScore !== null && r.awayScore !== '')
       ? `${r.homeScore}–${r.awayScore}` : '—';
-    const side = r.signalSide === '主' ? 'H' : r.signalSide === '客' ? 'A' : '';
+    const side = r.signalSide === '主' ? '主' : r.signalSide === '客' ? '客' : '';
     const resultLetter = mapResult(r.result);
     const pnlStr = isNaN(r.pnl) ? '—' : signed(r.pnl, 2);
     const balStr = isNaN(r.balance) ? '—' : r.balance.toFixed(2);
@@ -404,7 +404,7 @@ function paintRows() {
     const remaining = SORTED_ROWS.length - DISPLAY_COUNT;
     if (remaining > 0) {
       btn.style.display = '';
-      btn.textContent = `Load ${Math.min(PAGE_SIZE, remaining)} more · ${remaining} remaining`;
+      btn.textContent = `加载更多 · 剩余 ${remaining} 条`;
     } else {
       btn.style.display = 'none';
     }
@@ -413,12 +413,12 @@ function paintRows() {
 
 function mapResult(r) {
   switch (r) {
-    case '赢':   return 'W';
-    case '赢半': return 'W½';
-    case '输':   return 'L';
-    case '输半': return 'L½';
+    case '赢':   return '胜';
+    case '赢半': return '胜半';
+    case '输':   return '负';
+    case '输半': return '负半';
     case '走':
-    case '平':   return 'P';
+    case '平':   return '走';
     default:     return r || '—';
   }
 }

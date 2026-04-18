@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Negentropy Lab · Signal Archive</title>
-  <meta name="description" content="A time-sealed record of model outputs — Negentropy Lab · Signal Archive · 2026–">
+  <title>负熵实验室信号档案</title>
+  <meta name="description" content="负熵实验室信号档案 · 时间封存的足球博彩预测模型运行记录">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
@@ -15,13 +18,14 @@
 
   <header class="site-header">
     <div class="brand">
-      <div class="brand-line1">Negentropy Lab · Signal Archive</div>
-      <div class="brand-line2">2026–</div>
+      <div class="brand-main-cn">负熵实验室 · 信号档案</div>
+      <div class="brand-main-en">Negentropy Lab · Signal Archive</div>
+      <div class="brand-meta">2026 –</div>
     </div>
     <nav class="site-nav">
-      <a href="index.html" class="active">Archive</a>
-      <a href="protocol.html">Protocol</a>
-      <a href="about.html">About</a>
+      <a href="index.html" class="active">档案</a>
+      <a href="protocol.html">协议</a>
+      <a href="about.html">关于</a>
     </nav>
   </header>
 
@@ -29,7 +33,7 @@
 
   <section>
     <div class="chart-wrap"><canvas id="equityChart"></canvas></div>
-    <div class="caption">Cumulative units · 1 unit per signal · All settled signals</div>
+    <div class="caption">累计单位收益 · 每注 1 单位 · 含全部已结算信号</div>
   </section>
 
   <section>
@@ -38,39 +42,42 @@
 
   <section>
     <div class="heatmap" id="heatmap"></div>
-    <div class="caption">Signal density by week · 52-week view</div>
+    <div class="caption">按周统计的信号密度 · 近 52 周</div>
   </section>
 
   <section>
-    <div id="loading" class="loading">Loading track_record.csv…</div>
+    <div id="loading" class="loading">正在读取 track_record.csv…</div>
     <table class="record-table" id="recordTable" style="display:none">
       <thead>
         <tr>
-          <th class="num">#</th>
-          <th>Date</th>
-          <th>League</th>
-          <th>Match</th>
-          <th class="num">Score</th>
-          <th>Signal</th>
-          <th>Handicap</th>
-          <th class="num">Odds</th>
-          <th>Result</th>
-          <th class="num">P/L</th>
-          <th class="num">Balance</th>
-          <th>Archive</th>
+          <th class="num">序号</th>
+          <th>日期</th>
+          <th>联赛</th>
+          <th>赛事</th>
+          <th class="num">比分</th>
+          <th>信号</th>
+          <th>盘口</th>
+          <th class="num">赔率</th>
+          <th>赛果</th>
+          <th class="num">盈亏</th>
+          <th class="num">余额</th>
+          <th>存证</th>
         </tr>
       </thead>
       <tbody id="recordBody"></tbody>
     </table>
-    <button class="load-more" id="loadMore" style="display:none">Load more</button>
+    <button class="load-more" id="loadMore" style="display:none">加载更多</button>
   </section>
 
   <footer class="site-footer">
-    <div>Negentropy Lab · Signal Archive · 2026–</div>
+    <div class="footer-brand">
+      <div class="footer-brand-cn">负熵实验室 · 信号档案 · 2026 –</div>
+      <div class="footer-brand-en">Negentropy Lab · Signal Archive</div>
+    </div>
     <div class="footer-links">
-      <a href="protocol.html">Protocol</a>
-      <a href="about.html">About</a>
-      <a href="https://github.com/NegentropyLab/csv2026" target="_blank" rel="noopener">Repository ↗</a>
+      <a href="protocol.html">协议</a>
+      <a href="about.html">关于</a>
+      <a href="https://github.com/NegentropyLab/csv2026" target="_blank" rel="noopener">代码仓库 ↗</a>
       <!-- social links (e.g. X) can be added here later -->
     </div>
   </footer>

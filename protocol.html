@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Archive Protocol · Negentropy Lab</title>
+  <title>档案协议 · 负熵实验室</title>
+  <meta name="description" content="信号档案的运行协议与验证方式">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,59 +15,74 @@
 
   <header class="site-header">
     <div class="brand">
-      <div class="brand-line1">Negentropy Lab · Signal Archive</div>
-      <div class="brand-line2">2026–</div>
+      <div class="brand-main-cn">负熵实验室 · 信号档案</div>
+      <div class="brand-main-en">Negentropy Lab · Signal Archive</div>
+      <div class="brand-meta">2026 –</div>
     </div>
     <nav class="site-nav">
-      <a href="index.html">Archive</a>
-      <a href="protocol.html" class="active">Protocol</a>
-      <a href="about.html">About</a>
+      <a href="index.html">档案</a>
+      <a href="protocol.html" class="active">协议</a>
+      <a href="about.html">关于</a>
     </nav>
   </header>
 
   <article class="doc">
-    <h1>Archive Protocol</h1>
-    <p class="lede">This page documents the operational protocol governing the Signal Archive. The protocol is stable and has not been modified since the initial commit.</p>
+    <h1>档案协议</h1>
 
-    <h2>Generation</h2>
-    <p>Before each market window, the model produces one or more signals. Each signal predicts the outcome of a specific match under a specific handicap. At signal generation, the corresponding Crown odds (皇冠赔率) are captured. The batch is serialized as a CSV, compressed and encrypted into a zip file, and committed to this repository.</p>
-    <p>The time window between signal generation and match kickoff is always at least thirty minutes. The commit timestamp of each encrypted signal file, as recorded by GitHub, is the canonical proof of that ordering.</p>
+    <p class="protocol-preface">本页记录信号档案的运行协议。协议自首次提交以来保持稳定，未作修改。</p>
 
-    <h2>Settlement</h2>
-    <p>Match results are recorded in <code>track_record.csv</code> within twenty-four hours of match conclusion. At the same commit, the password for the corresponding zip file is published in <code>track_record.csv</code>, making the original encrypted signal fully verifiable against the row that references it.</p>
+    <h2>生成</h2>
 
-    <h2>Structural Invariants</h2>
-    <p>The archive is governed by five invariants. Violation of any invariant invalidates the archive.</p>
-    <ol>
-      <li><strong>Sequential Signal IDs.</strong> Every signal is assigned a strictly monotonically increasing integer ID. No gaps, no reuse, no reordering.</li>
-      <li><strong>Count Equality.</strong> The number of commits to the <code>/csv</code> directory equals the number of zip files equals the number of rows in <code>track_record.csv</code>.</li>
-      <li><strong>Monthly Snapshots.</strong> At the end of each calendar month, a snapshot commit is made with cumulative counts and metrics. Snapshots are immutable once committed.</li>
-      <li><strong>Odds Verifiability.</strong> Crown odds recorded at signal time are independently cross-verifiable against third-party odds history databases.</li>
-      <li><strong>Coverage Commitment.</strong> Signal scope is defined by objective model criteria fixed in advance, not by post-hoc selection. The criteria are documented in the repository and cannot be silently narrowed.</li>
+    <p>每次市场窗口开始前，模型产出一条或多条信号。每条信号针对特定赛事在特定盘口下的结果进行预测。信号生成时，同步记录该赛事的皇冠赔率。整批信号序列化为 CSV 文件，压缩加密后以 zip 格式提交至本仓库。</p>
+
+    <p>信号生成至赛事开球之间的时间间隔，不少于三十分钟。每个加密文件的 GitHub commit 时间戳，即为这一时序的规范证明。</p>
+
+    <h2>结算</h2>
+
+    <p>赛果在比赛结束后的 24 小时内录入 <code>track_record.csv</code>。同一次 commit 中，对应 zip 文件的解密密码一并公开，使原始信号可被任何人独立验证。</p>
+
+    <h2>结构不变量</h2>
+
+    <p>档案遵循以下五条不变量，任一被违反即视为档案作废。</p>
+
+    <ol class="invariants">
+      <li><strong>信号序号连续。</strong>每条信号分配严格递增的整数序号，不可跳号、不可复用、不可重排。</li>
+      <li><strong>数量一致。</strong><code>/csv</code> 目录下的 commit 数 = zip 文件数 = <code>track_record.csv</code> 行数。</li>
+      <li><strong>周期快照。</strong>每月末提交一次累计快照 commit，包含截至当时的全部计数与指标。快照一经提交即不再修改。</li>
+      <li><strong>赔率可核验。</strong>信号生成时刻所记录的皇冠赔率，可在第三方赔率历史数据库中独立核验。</li>
+      <li><strong>覆盖承诺。</strong>信号范围由客观的模型规则预先定义，不做事后挑选。规则记录在仓库中，不可在不留痕的情况下收窄。</li>
     </ol>
 
-    <h2>Verification</h2>
-    <p>For verifying a specific signal:</p>
-    <ol>
-      <li>Locate the signal's row in <code>track_record.csv</code>. Note the zip filename and password.</li>
-      <li>Download the zip from the <code>/csv</code> directory in this repository.</li>
-      <li>Check the commit timestamp of the zip — it must precede match kickoff.</li>
-      <li>Extract the zip using the password. Compute <code>SHA256</code> of the inner CSV.</li>
-      <li>Compare the content to the corresponding row in <code>track_record.csv</code>.</li>
-    </ol>
-    <p>A convenience script <code>verify.py</code> is provided in the repository root for batch verification.</p>
+    <h2>验证</h2>
 
-    <h2>Statistical Considerations</h2>
-    <p>The archive is a single public record, committed to this repository from the beginning and cross-referenced externally via domain registration, account history, and commit chronology. Under the hypothesis that the archive is one selected from many parallel private archives, the number of parallel archives required to yield the observed ROI grows super-exponentially with sample size and ROI magnitude.</p>
-    <p>At N ≥ 1000 signals and sustained ROI ≥ 10%, the number of candidate parallel archives required to explain the record by selection alone exceeds any plausible budget of parallel experimentation. The relevant figures will be restated, with the precise multi-testing correction, on each monthly snapshot.</p>
+    <p>验证任一条信号的步骤如下。</p>
+
+    <ol>
+      <li>在 <code>track_record.csv</code> 中定位该信号所在行，记录其对应的 zip 文件名与密码。</li>
+      <li>从仓库的 <code>/csv</code> 目录下载该 zip 文件。</li>
+      <li>查看该 zip 文件的 commit 时间戳——应早于该场赛事开球时间。</li>
+      <li>使用密码解压，计算内部 CSV 文件的 SHA256。</li>
+      <li>将其内容与 <code>track_record.csv</code> 中对应行比对。</li>
+    </ol>
+
+    <p>仓库根目录提供脚本 <code>verify.py</code>，用于批量执行上述步骤。</p>
+
+    <h2>统计学考量</h2>
+
+    <p>本档案是一份单一的公开记录，自项目开始即提交至本仓库，并通过域名注册信息、账号创建时间、commit 时序等外部路径交叉锚定。</p>
+
+    <p>若假设本档案是从大量未公开的平行档案中事后挑选出来的，产出同等表现所需的平行档案数量，随样本量与 ROI 量级呈超指数增长。当 N ≥ 1000、ROI 稳定在 10% 以上时，所需平行档案数已超出任何个人或组织可能并行运营的规模。具体的多重检验修正值，将在每月快照中更新披露。</p>
   </article>
 
   <footer class="site-footer">
-    <div>Negentropy Lab · Signal Archive · 2026–</div>
+    <div class="footer-brand">
+      <div class="footer-brand-cn">负熵实验室 · 信号档案 · 2026 –</div>
+      <div class="footer-brand-en">Negentropy Lab · Signal Archive</div>
+    </div>
     <div class="footer-links">
-      <a href="index.html">Archive</a>
-      <a href="about.html">About</a>
-      <a href="https://github.com/NegentropyLab/csv2026" target="_blank" rel="noopener">Repository ↗</a>
+      <a href="index.html">档案</a>
+      <a href="about.html">关于</a>
+      <a href="https://github.com/NegentropyLab/csv2026" target="_blank" rel="noopener">代码仓库 ↗</a>
     </div>
   </footer>
 

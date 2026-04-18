@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About · Negentropy Lab Signal Archive</title>
+  <title>关于 · 负熵实验室信号档案</title>
+  <meta name="description" content="关于负熵实验室信号档案">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,36 +15,40 @@
 
   <header class="site-header">
     <div class="brand">
-      <div class="brand-line1">Negentropy Lab · Signal Archive</div>
-      <div class="brand-line2">2026–</div>
+      <div class="brand-main-cn">负熵实验室 · 信号档案</div>
+      <div class="brand-main-en">Negentropy Lab · Signal Archive</div>
+      <div class="brand-meta">2026 –</div>
     </div>
     <nav class="site-nav">
-      <a href="index.html">Archive</a>
-      <a href="protocol.html">Protocol</a>
-      <a href="about.html" class="active">About</a>
+      <a href="index.html">档案</a>
+      <a href="protocol.html">协议</a>
+      <a href="about.html" class="active">关于</a>
     </nav>
   </header>
 
   <article class="doc">
-    <h1>About</h1>
+    <h1>关于</h1>
 
-    <p>The Signal Archive is the first public project of Negentropy Lab. It records the output of a football betting prediction model over a defined operational period beginning April 2026.</p>
+    <p>信号档案是负熵实验室的首个公开项目，记录一个足球博彩预测模型在指定周期内的运行结果。项目始于 2026 年 4 月。</p>
 
-    <p>The archive exists to establish a permanent, time-sealed record of a finite research project. Each signal is committed to the repository before the corresponding match begins; each settlement is recorded shortly afterward, alongside the decryption key that renders the original prediction auditable. Nothing in the archive can be altered after the fact without leaving a public trace.</p>
+    <p>档案的作用是建立一份不可事后更改的研究记录。每条信号在对应赛事开球前以加密形式提交至代码仓库；赛后录入赛果，同时公开该信号的解密密码，使原始预测可被独立审计。任何事后修改都会在仓库的提交历史中留下公开痕迹。</p>
 
-    <p>The scope is fixed in advance. A predetermined set of evaluation windows will be observed; when the final window closes, the archive will be sealed and preserved in its terminal state. No further signals will be added after that point, and the site you are reading will continue to exist as a static record of what the model did and did not do.</p>
+    <p>覆盖范围由客观规则预先定义。当规则所约束的周期结束时，档案将被封存，不再追加任何信号；本站作为静态记录继续存在，呈现模型在这段时间内产生与未产生的全部信号。</p>
 
-    <p>The archive is designed for observation, not interaction. There is no service offering, no subscription, no membership, no consulting engagement. Those interested in the protocol should consult the Protocol page. Those interested in the data should consult the repository directly.</p>
+    <p>本档案仅供查阅，不提供预测订阅、会员、咨询或合作服务。协议细节见"协议"页；原始数据见代码仓库。</p>
 
-    <p>Negentropy Lab · 2026</p>
+    <p class="about-signoff">负熵实验室 · 2026</p>
   </article>
 
   <footer class="site-footer">
-    <div>Negentropy Lab · Signal Archive · 2026–</div>
+    <div class="footer-brand">
+      <div class="footer-brand-cn">负熵实验室 · 信号档案 · 2026 –</div>
+      <div class="footer-brand-en">Negentropy Lab · Signal Archive</div>
+    </div>
     <div class="footer-links">
-      <a href="index.html">Archive</a>
-      <a href="protocol.html">Protocol</a>
-      <a href="https://github.com/NegentropyLab/csv2026" target="_blank" rel="noopener">Repository ↗</a>
+      <a href="index.html">档案</a>
+      <a href="protocol.html">协议</a>
+      <a href="https://github.com/NegentropyLab/csv2026" target="_blank" rel="noopener">代码仓库 ↗</a>
     </div>
   </footer>
 
