@@ -132,24 +132,22 @@ p { margin-bottom: 24px; }
 .stat-label { font-family: var(--font-serif); font-size: 13px; color: var(--text-secondary); }
 .stat-value { font-family: var(--font-mono); font-size: 32px; font-weight: 400; line-height: 1; font-variant-numeric: tabular-nums; }
 
-/* Heatmap */
-.heatmap {
-  display: flex;
-  gap: 3px;
-  overflow-x: auto;
-  padding-bottom: 4px;
+/* CSV link row */
+.csv-link-row {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-align: right;
+  margin-bottom: 1rem;
 }
-.heatmap-col { display: flex; flex-direction: column; gap: 3px; flex-shrink: 0; }
-.heatmap-cell {
-  width: 12px;
-  height: 12px;
-  background: var(--bg);
-  border: 1px solid var(--border);
+.csv-link-row a {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
-.heatmap-cell.l1 { background: #D8D6CE; border-color: #D8D6CE; }
-.heatmap-cell.l2 { background: #A8A6A0; border-color: #A8A6A0; }
-.heatmap-cell.l3 { background: #5A5A5A; border-color: #5A5A5A; }
-.heatmap-cell.l4 { background: #1A1A1A; border-color: #1A1A1A; }
+.csv-link-row a:hover {
+  color: var(--text-primary);
+}
 
 /* Table */
 .record-table {
@@ -246,6 +244,39 @@ p { margin-bottom: 24px; }
   color: var(--text-secondary);
 }
 
+/* Protocol — formulas and stats table */
+.formula-block {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 2px solid var(--border);
+  background: transparent;
+}
+.formula-block p { margin: 0.4rem 0; }
+.formula {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--text-primary);
+  padding-left: 1rem;
+}
+
+.stats-table {
+  border-collapse: collapse;
+  margin: 1rem 0 1.5rem;
+  font-size: 15px;
+}
+.stats-table th, .stats-table td {
+  padding: 6px 20px 6px 0;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.stats-table th {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.stats-table td {
+  font-family: var(--font-mono);
+}
+
 /* Loading */
 .loading { font-family: var(--font-sans-cn); font-size: 13px; color: var(--text-secondary); padding: 40px 0; }
 
@@ -259,7 +290,6 @@ p { margin-bottom: 24px; }
   .stat-value { font-size: 24px; }
   .record-table { font-size: 12px; }
   .record-table td, .record-table thead th { padding: 8px 6px; }
-  .heatmap-cell { width: 9px; height: 9px; }
   .chart-wrap { height: 340px; }
   .site-footer { flex-direction: column; }
   .footer-links a { margin-left: 0; margin-right: 20px; }

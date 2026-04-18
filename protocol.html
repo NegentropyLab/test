@@ -47,10 +47,10 @@
 
     <ol class="invariants">
       <li><strong>信号序号连续。</strong>每条信号分配严格递增的整数序号，不可跳号、不可复用、不可重排。</li>
-      <li><strong>数量一致。</strong><code>/csv</code> 目录下的 commit 数 = zip 文件数 = <code>track_record.csv</code> 行数。</li>
-      <li><strong>周期快照。</strong>每月末提交一次累计快照 commit，包含截至当时的全部计数与指标。快照一经提交即不再修改。</li>
+      <li><strong>数量对应。</strong>track_record.csv 中的每一行都引用 <code>/csv</code> 目录下一个真实存在的 zip 文件；<code>/csv</code> 目录下的每一个 zip 文件都被 track_record.csv 中至少一行引用。不存在"孤儿"——没有记录却无文件，也没有文件却未被记录。</li>
+      <li><strong>周期快照。</strong>每月末提交一次累计快照文件至 <code>/snapshots</code> 目录，内含截至当时的全部计数与指标。快照文件一经提交即不再修改；其内容与未来任一时点 track_record.csv 中截至同一时间的累计数据必须吻合。</li>
       <li><strong>赔率可核验。</strong>信号生成时刻所记录的皇冠赔率，可在第三方赔率历史数据库中独立核验。</li>
-      <li><strong>覆盖承诺。</strong>信号范围由客观的模型规则预先定义，不做事后挑选。规则记录在仓库中，不可在不留痕的情况下收窄。</li>
+      <li><strong>无事后过滤。</strong>模型产生的每一条信号都被录入档案。信号一经生成并 commit，不会因任何事后信息（包括市场波动、比赛过程、赛果）被从档案中撤除。</li>
     </ol>
 
     <h2>验证</h2>
@@ -71,7 +71,39 @@
 
     <p>本档案是一份单一的公开记录，自项目开始即提交至本仓库，并通过域名注册信息、账号创建时间、commit 时序等外部路径交叉锚定。</p>
 
-    <p>若假设本档案是从大量未公开的平行档案中事后挑选出来的，产出同等表现所需的平行档案数量，随样本量与 ROI 量级呈超指数增长。当 N ≥ 1000、ROI 稳定在 10% 以上时，所需平行档案数已超出任何个人或组织可能并行运营的规模。具体的多重检验修正值，将在每月快照中更新披露。</p>
+    <p>若假设本档案是从大量未公开的平行档案中事后挑选出来的，可对"所需平行档案数量"进行定量估计。</p>
+
+    <p>设每注以固定单位下注，平均赔率为 <em>o</em>，样本量为 <em>N</em>。在市场有效假设下（攻击者无真实 edge，期望 ROI = 0），有：</p>
+
+    <div class="formula-block">
+      <p>单注收益方差：</p>
+      <p class="formula">Var(X) = o − 1</p>
+
+      <p>ROI 标准差：</p>
+      <p class="formula">σ<sub>ROI</sub> = √( (o − 1) / N )</p>
+
+      <p>单一档案 ROI 超过门槛 T 的概率：</p>
+      <p class="formula">P(ROI ≥ T) = 1 − Φ( T / σ<sub>ROI</sub> )</p>
+
+      <p>攻击者运营 K 个平行档案，至少其中一个达到门槛的概率达 50% 所需的 K：</p>
+      <p class="formula">K ≈ ln(2) / P(ROI ≥ T)</p>
+    </div>
+
+    <p>代入典型值 <em>o</em> = 1.95、<em>N</em> = 1000，得 σ<sub>ROI</sub> ≈ 3.08%。攻击所需平行档案数量如下表：</p>
+
+    <table class="stats-table">
+      <thead>
+        <tr><th>ROI 门槛</th><th>所需平行档案数量</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>5%</td><td>约 13</td></tr>
+        <tr><td>10%</td><td>约 1,200</td></tr>
+        <tr><td>15%</td><td>约 120 万</td></tr>
+        <tr><td>20%</td><td>约 160 亿</td></tr>
+      </tbody>
+    </table>
+
+    <p>当 <em>N</em> ≥ 1000、ROI 稳定在 10% 以上时，所需平行档案数量已超出任何个人或组织可能并行运营的规模。每月快照将以档案截至当时的实际平均赔率代入，更新上述估算。</p>
   </article>
 
   <footer class="site-footer">

@@ -59,7 +59,6 @@ async function main() {
   renderStateLine(ALL_ROWS);
   renderEquityCurve(settled);
   renderStats(settled);
-  renderHeatmap(ALL_ROWS);
   renderTable(ALL_ROWS);
 }
 
@@ -83,6 +82,7 @@ function normalizeRow(r) {
     pnl:         parseFloat(r['盈亏']),
     balance:     parseFloat(r['余额']),
     stake:       parseFloat(r['下注资金']),
+    sourceFile:  r['源文件'],
     zipUrl:      r['存证文件URL']
   };
 }
@@ -290,54 +290,6 @@ function renderStats(settled) {
   `).join('');
 }
 
-function renderHeatmap(rows) {
-  const el = document.getElementById('heatmap');
-  if (!el) return;
-
-  const counts = {};
-  rows.forEach(r => {
-    const d = parseTs(r.signalTime);
-    if (!d) return;
-    const key = ymd(d);
-    counts[key] = (counts[key] || 0) + 1;
-  });
-
-  const today = new Date();
-  const end = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const start = new Date(end);
-  start.setDate(start.getDate() - 52 * 7);
-  start.setDate(start.getDate() - start.getDay()); // align to Sunday
-
-  const max = Math.max(0, ...Object.values(counts));
-  const cols = [];
-  const cursor = new Date(start);
-
-  for (let w = 0; w < 53; w++) {
-    let col = '<div class="heatmap-col">';
-    for (let d = 0; d < 7; d++) {
-      if (cursor <= end) {
-        const c = counts[ymd(cursor)] || 0;
-        let lvl = 0;
-        if (max > 0 && c > 0) {
-          const r = c / max;
-          if (r <= 0.25) lvl = 1;
-          else if (r <= 0.5) lvl = 2;
-          else if (r <= 0.75) lvl = 3;
-          else lvl = 4;
-        }
-        col += `<div class="heatmap-cell ${lvl ? 'l' + lvl : ''}"></div>`;
-      } else {
-        col += '<div class="heatmap-cell" style="visibility:hidden"></div>';
-      }
-      cursor.setDate(cursor.getDate() + 1);
-    }
-    col += '</div>';
-    cols.push(col);
-  }
-
-  el.innerHTML = cols.join('');
-}
-
 function renderTable(rows) {
   const tbody = document.getElementById('recordBody');
   const table = document.getElementById('recordTable');
@@ -381,8 +333,11 @@ function paintRows() {
     const pnlStr = isNaN(r.pnl) ? '—' : signed(r.pnl, 2);
     const balStr = isNaN(r.balance) ? '—' : r.balance.toFixed(2);
     const oddsStr = r.odds != null ? r.odds.toFixed(2) : '—';
-    const zipLink = r.zipUrl
-      ? `<a href="${escapeAttr(r.zipUrl)}" target="_blank" rel="noopener">↗</a>`
+    const stakeStr = isNaN(r.stake) ? '—' : r.stake.toFixed(2);
+    const zipFile = r.sourceFile ? String(r.sourceFile).replace(/\.csv$/i, '.zip') : '';
+    const archiveUrl = zipFile ? `./csv/${zipFile}` : '';
+    const zipLink = archiveUrl
+      ? `<a href="${escapeAttr(archiveUrl)}" target="_blank" rel="noopener">↗</a>`
       : '';
     return `<tr>
       <td class="num">${r.signalId ?? ''}</td>
@@ -392,6 +347,7 @@ function paintRows() {
       <td class="num">${escapeHtml(score)}</td>
       <td class="text">${side}</td>
       <td class="text">${escapeHtml(r.handicap ?? '')}</td>
+      <td class="num">${stakeStr}</td>
       <td class="num">${oddsStr}</td>
       <td class="text">${resultLetter}</td>
       <td class="num">${pnlStr}</td>
