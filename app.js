@@ -126,28 +126,25 @@ function renderEquityCurve(settled) {
   if (!canvas || settled.length === 0) return;
 
   const labels = settled.map(r => formatDateOnly(parseTs(r.matchTime) || parseTs(r.signalTime)));
-  let cum = 0;
-  const data = settled.map(r => {
-    const stake = r.stake && r.stake > 0 ? r.stake : null;
-    const pnl = isNaN(r.pnl) ? 0 : r.pnl;
-    const unit = stake ? pnl / stake : 0;
-    cum += unit;
-    return Number(cum.toFixed(4));
-  });
+  const data = settled.map(r => isNaN(r.balance) ? null : r.balance);
+  const initialBalance = (data[0] != null && !isNaN(settled[0].pnl))
+    ? data[0] - settled[0].pnl
+    : null;
 
-  const zeroLinePlugin = {
-    id: 'zeroLine',
+  const refLinePlugin = {
+    id: 'refLine',
     beforeDatasetsDraw(chart) {
+      if (initialBalance == null) return;
       const { ctx, chartArea, scales } = chart;
-      const y0 = scales.y.getPixelForValue(0);
-      if (y0 >= chartArea.top && y0 <= chartArea.bottom) {
+      const y = scales.y.getPixelForValue(initialBalance);
+      if (y >= chartArea.top && y <= chartArea.bottom) {
         ctx.save();
         ctx.strokeStyle = '#B8B6AF';
         ctx.setLineDash([3, 4]);
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(chartArea.left, y0);
-        ctx.lineTo(chartArea.right, y0);
+        ctx.moveTo(chartArea.left, y);
+        ctx.lineTo(chartArea.right, y);
         ctx.stroke();
         ctx.restore();
       }
@@ -187,7 +184,7 @@ function renderEquityCurve(settled) {
           padding: 10,
           displayColors: false,
           callbacks: {
-            label: (ctx) => (ctx.raw >= 0 ? '+' : '') + ctx.raw.toFixed(2) + ' 单位'
+            label: (ctx) => '余额 ' + formatMoney(ctx.raw)
           }
         }
       },
@@ -207,14 +204,14 @@ function renderEquityCurve(settled) {
           ticks: {
             color: '#6B6B6B',
             font: { family: 'SF Mono, monospace', size: 11 },
-            callback: (v) => (v >= 0 ? '+' : '') + v
+            callback: (v) => formatMoney(v)
           },
           grid: { color: '#F0EEE7', drawTicks: false, tickLength: 0 },
           border: { color: '#E5E3DC' }
         }
       }
     },
-    plugins: [zeroLinePlugin]
+    plugins: [refLinePlugin]
   });
 }
 
@@ -336,7 +333,7 @@ function paintRows() {
     const oddsStr = r.odds != null ? r.odds.toFixed(2) : '—';
     const stakeNum = isNaN(r.stake) ? '—' : r.stake.toFixed(2);
     const stakeStr = r.stakeRatio
-      ? `${stakeNum}<span class="ratio">${escapeHtml(r.stakeRatio)}</span>`
+      ? `<div>${stakeNum}</div><div class="ratio">${escapeHtml(r.stakeRatio)}</div>`
       : stakeNum;
     const zipFile = r.sourceFile ? String(r.sourceFile).replace(/\.csv$/i, '.zip') : '';
     const archiveUrl = zipFile ? `./csv/${zipFile}` : '';
@@ -408,6 +405,11 @@ function formatDateTime(d) {
   const hh = String(d.getHours()).padStart(2, '0');
   const mm = String(d.getMinutes()).padStart(2, '0');
   return `${ymd(d)} ${hh}:${mm}`;
+}
+
+function formatMoney(n) {
+  if (n == null || isNaN(n)) return '';
+  return Number(n).toLocaleString('en-US', { maximumFractionDigits: 0 });
 }
 
 function signed(n, dp) {
