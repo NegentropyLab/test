@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Negentropy Lab · Signal Archive</title>
+  <meta name="description" content="A time-sealed record of model outputs — Negentropy Lab · Signal Archive · 2026–">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-line1">Negentropy Lab · Signal Archive</div>
+      <div class="brand-line2">2026–</div>
+    </div>
+    <nav class="site-nav">
+      <a href="index.html" class="active">Archive</a>
+      <a href="protocol.html">Protocol</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <div class="state-line" id="stateLine"></div>
+
+  <section>
+    <div class="chart-wrap"><canvas id="equityChart"></canvas></div>
+    <div class="caption">Cumulative units · 1 unit per signal · All settled signals</div>
+  </section>
+
+  <section>
+    <div class="stats-row" id="statsRow"></div>
+  </section>
+
+  <section>
+    <div class="heatmap" id="heatmap"></div>
+    <div class="caption">Signal density by week · 52-week view</div>
+  </section>
+
+  <section>
+    <div id="loading" class="loading">Loading track_record.csv…</div>
+    <table class="record-table" id="recordTable" style="display:none">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Date</th>
+          <th>League</th>
+          <th>Match</th>
+          <th class="num">Score</th>
+          <th>Signal</th>
+          <th>Handicap</th>
+          <th class="num">Odds</th>
+          <th>Result</th>
+          <th class="num">P/L</th>
+          <th class="num">Balance</th>
+          <th>Archive</th>
+        </tr>
+      </thead>
+      <tbody id="recordBody"></tbody>
+    </table>
+    <button class="load-more" id="loadMore" style="display:none">Load more</button>
+  </section>
+
+  <footer class="site-footer">
+    <div>Negentropy Lab · Signal Archive · 2026–</div>
+    <div class="footer-links">
+      <a href="protocol.html">Protocol</a>
+      <a href="about.html">About</a>
+      <a href="https://github.com/NegentropyLab/csv2026" target="_blank" rel="noopener">Repository ↗</a>
+      <!-- social links (e.g. X) can be added here later -->
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
