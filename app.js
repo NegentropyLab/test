@@ -339,31 +339,23 @@ function paintRows() {
     const pnlStr = isNaN(r.pnl) ? '—' : signed(r.pnl, 2);
     const balStr = isNaN(r.balance) ? '—' : r.balance.toFixed(2);
     const oddsStr = r.odds != null ? r.odds.toFixed(2) : '—';
-    const hdpStr = (r.hdp === null || r.hdp === undefined || r.hdp === '') ? '—' : r.hdp;
     const stakeNum = isNaN(r.stake) ? '—' : r.stake.toFixed(2);
     const stakeStr = r.stakeRatio
-      ? `<div>${stakeNum}</div><div class="ratio">${escapeHtml(r.stakeRatio)}</div>`
+      ? `${stakeNum}<span class="ratio">${escapeHtml(r.stakeRatio)}</span>`
       : stakeNum;
-    const zipFile = r.sourceFile ? String(r.sourceFile).replace(/\.csv$/i, '.zip') : '';
-    const archiveUrl = zipFile ? `./csv/${zipFile}` : '';
-    const zipLink = archiveUrl
-      ? `<a href="${escapeAttr(archiveUrl)}" target="_blank" rel="noopener">↗</a>`
-      : '';
     return `<tr>
       <td class="num">${r.signalId ?? ''}</td>
       <td class="text">${escapeHtml(matchTimeStr)}</td>
       <td class="text">${escapeHtml(r.league ?? '')}</td>
-      <td class="text">${escapeHtml(r.home ?? '')}</td>
-      <td class="num">${escapeHtml(String(hdpStr))}</td>
-      <td class="text">${escapeHtml(r.away ?? '')}</td>
+      <td class="text">${escapeHtml(r.home ?? '')}<span class="vs">vs</span>${escapeHtml(r.away ?? '')}</td>
       <td class="num">${escapeHtml(score)}</td>
       <td class="text">${side}</td>
+      <td class="text">${escapeHtml(r.handicap ?? '')}</td>
       <td class="num">${stakeStr}</td>
       <td class="num">${oddsStr}</td>
       <td class="text">${resultLetter}</td>
       <td class="num">${pnlStr}</td>
       <td class="num">${balStr}</td>
-      <td class="text link">${zipLink}</td>
     </tr>`;
   }).join('');
 

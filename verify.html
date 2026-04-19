@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>关于 · 负熵实验室信号档案</title>
-  <meta name="description" content="关于负熵实验室信号档案">
+  <title>在线验证 · 负熵实验室信号档案</title>
+  <meta name="description" content="信号档案的在线独立验证工具">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=20260419c">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.45/dist/zip-full.min.js" defer></script>
+  <script src="verify.js?v=20260419c" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -22,20 +25,23 @@
     <nav class="site-nav">
       <a href="index.html">档案</a>
       <a href="protocol.html">协议</a>
-      <a href="about.html" class="active">关于</a>
+      <a href="about.html">关于</a>
     </nav>
   </header>
 
   <article class="doc">
-    <h1>关于</h1>
+    <h1>在线验证</h1>
 
-    <p>信号档案是负熵实验室的首个公开项目，记录一个足球博彩预测模型在指定周期内的运行结果。项目始于 2026 年 4 月。</p>
+    <p class="lede">选择一条信号编号，浏览器独立完成下载、AES 解密、SHA-256 计算与 GitHub commit 时间戳核验。整个流程不依赖任何后端，所有运算在本地完成。</p>
 
-    <p>档案的作用是建立一份不可事后更改的研究记录。每条信号在对应赛事开赛前以加密形式提交至代码仓库；赛后录入赛果，同时公开该信号的解密密码，使原始预测可被独立审计。任何事后修改、删除、增加都会在仓库的提交历史中留下公开痕迹。</p>
+    <div class="verify-controls">
+      <label for="sigSelect">信号编号</label>
+      <select id="sigSelect" disabled><option>正在加载 track_record.csv …</option></select>
+      <button id="verifyBtn" disabled>开始验证</button>
+    </div>
 
-    <p>项目本身是有限的。当研究阶段告一段落，档案将被封存为完整的静态记录，不再追加信号；本站继续存在，保留模型在该阶段产生的全部信号。</p>
-
-    <p class="about-signoff">负熵实验室 · 2026</p>
+    <div id="verifySteps"></div>
+    <div id="verifySummary"></div>
   </article>
 
   <footer class="site-footer">
@@ -46,7 +52,7 @@
     <div class="footer-links">
       <a href="index.html">档案</a>
       <a href="protocol.html">协议</a>
-      <a href="https://github.com/NegentropyLab/csv2026" target="_blank" rel="noopener">代码仓库 ↗</a>
+      <a href="about.html">关于</a>
     </div>
   </footer>
 

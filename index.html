@@ -8,10 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260419b">
+  <link rel="stylesheet" href="styles.css?v=20260419c">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
-  <script src="app.js?v=20260419b" defer></script>
+  <script src="app.js?v=20260419c" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -42,7 +42,8 @@
 
   <section>
     <div class="csv-link-row">
-      完整原始数据：<a href="https://github.com/NegentropyLab/test/blob/main/track_record.csv" target="_blank" rel="noopener">查看 track_record.csv ↗</a>
+      <span>完整原始数据：<a href="https://github.com/NegentropyLab/test/blob/main/track_record.csv" target="_blank" rel="noopener">查看 track_record.csv ↗</a></span>
+      <span class="csv-link-sep">加密存证：<a href="https://github.com/NegentropyLab/test/tree/main/csv" target="_blank" rel="noopener">/csv 目录 ↗</a></span>
     </div>
     <div id="loading" class="loading">正在读取 track_record.csv…</div>
     <div class="table-scroll">
@@ -52,17 +53,15 @@
           <th class="num">编号</th>
           <th>比赛时间</th>
           <th>联赛</th>
-          <th>主队</th>
-          <th class="num">HDP</th>
-          <th>客队</th>
+          <th>赛事</th>
           <th class="num">比分</th>
           <th>信号</th>
+          <th>盘口</th>
           <th class="num">下注资金</th>
           <th class="num">赔率</th>
           <th>赛果</th>
           <th class="num">盈亏</th>
           <th class="num">余额</th>
-          <th>存证</th>
         </tr>
       </thead>
       <tbody id="recordBody"></tbody>
