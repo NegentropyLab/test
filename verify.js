@@ -35,8 +35,6 @@ async function init() {
     return;
   }
 
-  runAudit();
-
   btn.addEventListener('click', () => {
     const id = sel.value;
     if (!id) return;
@@ -47,88 +45,6 @@ async function init() {
       sel.disabled = false;
     });
   });
-}
-
-async function runAudit() {
-  const countPanel  = document.getElementById('countPanel');
-  const orphanPanel = document.getElementById('orphanPanel');
-
-  // CSV side: dedupe 源文件 column → expected zip filenames
-  const expectedZips = new Set();
-  CSV_ROWS.forEach(r => {
-    const f = String(r['源文件'] || '').trim();
-    if (f) expectedZips.add(f.replace(/\.csv$/i, '.zip'));
-  });
-  const csvCount = expectedZips.size;
-
-  // /csv directory side: GitHub Contents API
-  let dirZips = null;
-  let dirError = null;
-  try {
-    const url = `https://api.github.com/repos/${GH_API_REPO}/contents/csv`;
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    const list = await resp.json();
-    if (!Array.isArray(list)) throw new Error('GitHub 返回非列表');
-    dirZips = new Set(
-      list.filter(f => f && f.type === 'file' && /\.zip$/i.test(f.name)).map(f => f.name)
-    );
-  } catch (e) {
-    dirError = e.message;
-  }
-
-  if (dirError) {
-    if (countPanel) countPanel.innerHTML = `
-      <table class="audit-table">
-        <tr><td>track_record.csv · 源文件去重</td><td class="num">${csvCount}</td></tr>
-        <tr><td>/csv 目录 · 实际 zip 数</td><td class="warn">查询失败</td></tr>
-      </table>
-      <div class="audit-note">GitHub API 查询失败：${escapeHtml(dirError)}（未鉴权限速 60 次/小时）</div>
-    `;
-    if (orphanPanel) orphanPanel.innerHTML = `<div class="audit-note">目录列表未取到，孤儿核验跳过。</div>`;
-    return;
-  }
-
-  const dirCount    = dirZips.size;
-  const onlyInCsv   = [...expectedZips].filter(z => !dirZips.has(z)).sort();
-  const onlyInDir   = [...dirZips].filter(z => !expectedZips.has(z)).sort();
-  const countsMatch = csvCount === dirCount;
-  const noOrphan    = onlyInCsv.length === 0 && onlyInDir.length === 0;
-
-  // Panel 1: counts
-  if (countPanel) countPanel.innerHTML = `
-    <table class="audit-table">
-      <tr><td>track_record.csv · 源文件去重</td><td class="num">${csvCount}</td></tr>
-      <tr><td>/csv 目录 · 实际 zip 数</td><td class="num">${dirCount}</td></tr>
-      <tr><td>状态</td><td class="${countsMatch ? 'ok' : 'mismatch'}">${countsMatch ? '✓ 数量一致' : `✗ 数量差 ${Math.abs(csvCount - dirCount)} 个`}</td></tr>
-    </table>
-  `;
-
-  // Panel 2: orphans
-  if (orphanPanel) {
-    if (noOrphan) {
-      orphanPanel.innerHTML = `
-        <table class="audit-table">
-          <tr><td>有记录无文件（CSV 引用但 /csv 缺失）</td><td class="num">0</td></tr>
-          <tr><td>有文件无记录（/csv 存在但未被引用）</td><td class="num">0</td></tr>
-          <tr><td>状态</td><td class="ok">✓ 不存在孤儿</td></tr>
-        </table>
-      `;
-    } else {
-      const listOf = (arr) => arr.length
-        ? `<div class="audit-note">${arr.map(escapeHtml).join('，')}</div>`
-        : '';
-      orphanPanel.innerHTML = `
-        <table class="audit-table">
-          <tr><td>有记录无文件（CSV 引用但 /csv 缺失）</td><td class="num">${onlyInCsv.length}</td></tr>
-          <tr><td>有文件无记录（/csv 存在但未被引用）</td><td class="num">${onlyInDir.length}</td></tr>
-          <tr><td>状态</td><td class="mismatch">✗ 存在孤儿</td></tr>
-        </table>
-        ${onlyInCsv.length ? '<div class="audit-label">仅在 CSV 中（缺失 zip 文件）：</div>' + listOf(onlyInCsv) : ''}
-        ${onlyInDir.length ? '<div class="audit-label">仅在目录中（未被记录引用）：</div>' + listOf(onlyInDir) : ''}
-      `;
-    }
-  }
 }
 
 async function runVerify(signalId) {
@@ -265,7 +181,7 @@ async function runVerify(signalId) {
     return;
   }
 
-  // Final summary + decrypted content
+  // Final summary + full decrypted CSV
   summaryEl.innerHTML = `
     <div class="verify-summary">
       <div class="vs-title">信号 ${escapeHtml(signalId)} 的赛前存证已通过独立验证</div>
@@ -273,29 +189,41 @@ async function runVerify(signalId) {
         ? `<div class="vs-meta">commit 时间戳 · ${escapeHtml(commitTimeISO)}</div>`
         : `<div class="vs-meta">本次未取得 commit 时间戳，其余环节均通过</div>`}
     </div>
-    ${renderDecryptedRow(innerRow)}
+    ${renderDecryptedCsv(csvText, innerName, String(signalId))}
   `;
 }
 
-function renderDecryptedRow(innerRow) {
-  if (!innerRow) return '';
-  const entries = Object.entries(innerRow).filter(([k, v]) => {
-    const val = String(v ?? '').trim();
-    return k && val !== '';
-  });
-  const body = entries.map(([k, v]) => {
-    const val = String(v).trim();
-    const isUrl = /^https?:\/\//i.test(val);
-    const cell = isUrl
-      ? `<a href="${escapeAttr(val)}" target="_blank" rel="noopener">打开页面 ↗</a>`
-      : escapeHtml(val);
-    return `<tr><th scope="row">${escapeHtml(k)}</th><td>${cell}</td></tr>`;
+function renderDecryptedCsv(csvText, innerName, signalId) {
+  if (!csvText) return '';
+  const parsed = Papa.parse(csvText.trim(), { header: true, skipEmptyLines: true });
+  const headers = (parsed.meta && parsed.meta.fields) || [];
+  const rows = parsed.data || [];
+  if (!headers.length || !rows.length) return '';
+
+  const thead = '<tr>' + headers.map(h => `<th>${escapeHtml(h)}</th>`).join('') + '</tr>';
+  const tbody = rows.map(r => {
+    const isCurrent = String(r['编号'] ?? '').trim() === signalId;
+    const tds = headers.map(h => {
+      const v = String(r[h] ?? '').trim();
+      if (!v) return '<td class="empty">—</td>';
+      if (/^https?:\/\//i.test(v)) {
+        return `<td class="url"><a href="${escapeAttr(v)}" target="_blank" rel="noopener">打开页面 ↗</a></td>`;
+      }
+      return `<td>${escapeHtml(v)}</td>`;
+    }).join('');
+    return `<tr${isCurrent ? ' class="current"' : ''}>${tds}</tr>`;
   }).join('');
+
   return `
     <div class="decrypted-content">
-      <div class="dc-title">解密后的原始信号</div>
-      <div class="dc-note">以下内容来自刚刚解密的 zip 内的 CSV，可与记录行交叉比对。两条页面 URL 点击后在新标签页打开，可独立核对皇冠赔率与赛果。</div>
-      <table class="dc-table">${body}</table>
+      <div class="dc-title">解密后的原始信号 · ${escapeHtml(innerName || 'CSV')}</div>
+      <div class="dc-note">下表是刚刚解密的 zip 内 CSV 的完整内容，共 ${rows.length} 行。当前选中的信号行已加粗。页面 URL 列点击后在新标签页打开，可独立核对皇冠赔率与赛果。</div>
+      <div class="dc-scroll">
+        <table class="dc-table-full">
+          <thead>${thead}</thead>
+          <tbody>${tbody}</tbody>
+        </table>
+      </div>
     </div>
   `;
 }

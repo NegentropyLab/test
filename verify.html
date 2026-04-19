@@ -8,10 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260419f">
+  <link rel="stylesheet" href="styles.css?v=20260419g">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.45/dist/zip-full.min.js" defer></script>
-  <script src="verify.js?v=20260419f" defer></script>
+  <script src="verify.js?v=20260419g" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -33,18 +33,7 @@
   <article class="doc">
     <h1>在线验证</h1>
 
-    <p class="lede">页面提供三项核验：数量对应、孤儿核验、单条信号验证。整个流程不依赖任何后端，所有运算在本地完成。</p>
-
-    <h2>1. 数量对应核验</h2>
-    <p>核对 <code>track_record.csv</code> 中 <code>源文件</code> 列去重后的数量，与仓库 <code>/csv</code> 目录下 zip 文件的实际数量是否一致。</p>
-    <div id="countPanel" class="audit-panel">正在核验…</div>
-
-    <h2>2. 孤儿核验</h2>
-    <p>逐一比对两侧集合，确认不存在"孤儿"——既没有记录却无文件，也没有文件却未被记录。</p>
-    <div id="orphanPanel" class="audit-panel">等待数量核验完成…</div>
-
-    <h2>3. 单条信号验证</h2>
-    <p>选择一条信号编号，浏览器独立完成下载、AES 解密、SHA-256 计算、commit 时间戳查询与内容比对。通过后展示解密出的原始信号全文。</p>
+    <p class="lede">选择一条信号编号，浏览器独立完成下载、AES 解密、SHA-256 计算、commit 时间戳查询与内容比对。通过后展示解密出的原始信号全文。</p>
 
     <div class="verify-controls">
       <label for="sigSelect">信号编号</label>
