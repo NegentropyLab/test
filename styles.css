@@ -245,6 +245,15 @@ p { margin-bottom: 24px; }
 
 .invariants li { margin-bottom: 0.8rem; }
 
+.protocol-footnote {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
 .about-signoff {
   margin-top: 3rem;
   font-family: var(--font-serif);

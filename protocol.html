@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260419h">
+  <link rel="stylesheet" href="styles.css?v=20260419i">
 </head>
 <body>
 <div class="wrap">
@@ -35,7 +35,7 @@
 
     <p>每次市场窗口开始前，模型产出一条或多条信号。每条信号针对特定赛事在特定盘口下的结果进行预测。信号生成时，同步记录该赛事的皇冠赔率。整批信号序列化为 CSV 文件，压缩加密后以 zip 格式提交至本仓库。</p>
 
-    <p>信号生成至赛事开球之间的时间间隔，不少于三十分钟。每个加密文件的 GitHub commit 时间戳，即为这一时序的规范证明。</p>
+    <p>信号生成至赛事开赛之间的时间间隔，不少于三十分钟。每个加密文件的 GitHub commit 时间戳，即为这一时序的规范证明。</p>
 
     <h2>结算</h2>
 
@@ -51,10 +51,6 @@
       <li><strong>无事后过滤。</strong>模型产生的每一条信号都被录入档案。信号一经生成并 commit，不会因任何事后信息（包括市场波动、比赛过程、赛果）被从档案中撤除。</li>
     </ol>
 
-    <h2>周期快照</h2>
-
-    <p>周期提交一次累计快照文件至 <code>/snapshots</code> 目录，内含截至当时的全部计数与指标。快照文件一经提交即不再修改；其内容与未来任一时点 track_record.csv 中截至同一时间的累计数据必须吻合。</p>
-
     <h2>验证</h2>
 
     <p>验证任一条信号的步骤如下。</p>
@@ -62,12 +58,12 @@
     <ol>
       <li>在 <code>track_record.csv</code> 中定位该信号所在行，记录其对应的 zip 文件名与密码。</li>
       <li>从仓库的 <code>/csv</code> 目录下载该 zip 文件。</li>
-      <li>查看该 zip 文件的 commit 时间戳——应早于该场赛事开球时间。</li>
+      <li>查看该 zip 文件的 commit 时间戳——应早于该场赛事开赛时间。</li>
       <li>使用密码解压，计算内部 CSV 文件的 SHA256。</li>
       <li>将其内容与 <code>track_record.csv</code> 中对应行比对。</li>
     </ol>
 
-    <p>仓库根目录提供脚本 <code>verify.py</code>，用于批量执行上述步骤。此外提供在线验证工具：<a href="verify.html">在线验证 ↗</a>，无需安装任何软件，浏览器即可独立完成下载、解密、SHA-256 与 commit 时间戳核验。</p>
+    <p>提供在线验证工具：<a href="verify.html">在线验证 ↗</a>，无需安装任何软件，浏览器即可独立完成下载、解密、SHA-256 与 commit 时间戳核验。</p>
 
     <h2>统计学考量</h2>
 
@@ -106,6 +102,10 @@
     </table>
 
     <p>当 <em>N</em> ≥ 1000、ROI 稳定在 10% 以上时，所需平行档案数量已超出任何个人或组织可能并行运营的规模。每月快照将以档案截至当时的实际平均赔率代入，更新上述估算。</p>
+
+    <p>上述估算基于三个前提：单注结果近似独立；攻击者不具备真实 edge；单注收益的分布由中心极限定理近似为正态。在 ROI ≤ 15% 的区间，上述近似在常用误差范围内稳健；ROI ≥ 20% 的估算更依赖于尾概率近似，实际量级可能偏离一个到若干个数量级，但仍远超可行范围。</p>
+
+    <p class="protocol-footnote">相关方法论参见 Bonferroni (1936) 多重比较修正、Benjamini-Hochberg (1995) 错误发现率控制，以及金融领域对数据窥探偏差的经典讨论（Sullivan, Timmermann, White 1999；Harvey, Liu, Zhu 2016）。</p>
   </article>
 
   <footer class="site-footer">
