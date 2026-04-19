@@ -7,8 +7,18 @@ let CSV_ROWS  = [];
 let CSV_BY_ID = {};
 
 async function init() {
-  const sel = document.getElementById('sigSelect');
-  const btn = document.getElementById('verifyBtn');
+  const sigHeader = document.getElementById('sigHeader');
+
+  const params = new URLSearchParams(window.location.search);
+  const signalId = params.get('id');
+
+  if (!signalId) {
+    sigHeader.innerHTML = `
+      <div class="sig-header">
+        <div class="sh-empty">请从<a href="index.html">档案页</a>点击记录表"核验"列进入验证。</div>
+      </div>`;
+    return;
+  }
 
   try {
     const resp = await fetch(CSV_PATH, { cache: 'no-store' });
@@ -18,33 +28,54 @@ async function init() {
     CSV_ROWS = parsed.data.filter(r => r['编号']);
     CSV_BY_ID = {};
     CSV_ROWS.forEach(r => { CSV_BY_ID[String(r['编号'])] = r; });
-
-    const opts = ['<option value="">— 请选择信号编号 —</option>']
-      .concat(CSV_ROWS.slice().reverse().map(r => {
-        const id    = String(r['编号'] || '');
-        const home  = r['主队'] || '';
-        const away  = r['客队'] || '';
-        const dt    = (r['比赛时间'] || '').slice(0, 16);
-        return `<option value="${escapeAttr(id)}">${escapeHtml(id)} · ${escapeHtml(dt)} · ${escapeHtml(home)} vs ${escapeHtml(away)}</option>`;
-      }));
-    sel.innerHTML = opts.join('');
-    sel.disabled = false;
-    btn.disabled = false;
   } catch (e) {
-    sel.innerHTML = `<option>track_record.csv 加载失败：${escapeHtml(e.message)}</option>`;
+    sigHeader.innerHTML = `
+      <div class="sig-header">
+        <div class="sh-empty">track_record.csv 加载失败：${escapeHtml(e.message)}</div>
+      </div>`;
     return;
   }
 
-  btn.addEventListener('click', () => {
-    const id = sel.value;
-    if (!id) return;
-    btn.disabled = true;
-    sel.disabled = true;
-    runVerify(id).finally(() => {
-      btn.disabled = false;
-      sel.disabled = false;
-    });
-  });
+  const row = CSV_BY_ID[signalId];
+  if (!row) {
+    sigHeader.innerHTML = `
+      <div class="sig-header">
+        <div class="sh-empty">未在 track_record.csv 中找到编号 ${escapeHtml(signalId)}。</div>
+      </div>`;
+    return;
+  }
+
+  renderSigHeader(row);
+
+  // Auto-run verification
+  runVerify(signalId);
+}
+
+function renderSigHeader(row) {
+  const sigHeader = document.getElementById('sigHeader');
+  const id   = String(row['编号'] || '');
+  const home = row['主队'] || '';
+  const away = row['客队'] || '';
+  const dt   = (row['比赛时间'] || '').slice(0, 16);
+  const league = row['联赛'] || '';
+  const oddsUrl   = String(row['赔率页面URL'] || '').trim();
+  const resultUrl = String(row['赛果页面URL'] || '').trim();
+
+  const links = [];
+  if (/^https?:\/\//i.test(oddsUrl)) {
+    links.push(`<a href="${escapeAttr(oddsUrl)}" target="_blank" rel="noopener">皇冠赔率页面 ↗</a>`);
+  }
+  if (/^https?:\/\//i.test(resultUrl)) {
+    links.push(`<a href="${escapeAttr(resultUrl)}" target="_blank" rel="noopener">赛果页面 ↗</a>`);
+  }
+
+  sigHeader.innerHTML = `
+    <div class="sig-header">
+      <div class="sh-title">信号 ${escapeHtml(id)} · ${escapeHtml(home)} vs ${escapeHtml(away)}</div>
+      <div class="sh-meta">${escapeHtml(league)} · ${escapeHtml(dt)}</div>
+      ${links.length ? `<div class="sh-actions">${links.join('')}</div>` : ''}
+    </div>
+  `;
 }
 
 async function runVerify(signalId) {
@@ -217,7 +248,7 @@ function renderDecryptedCsv(csvText, innerName, signalId) {
   return `
     <div class="decrypted-content">
       <div class="dc-title">解密后的原始信号 · ${escapeHtml(innerName || 'CSV')}</div>
-      <div class="dc-note">下表是刚刚解密的 zip 内 CSV 的完整内容，共 ${rows.length} 行。当前选中的信号行已加粗。页面 URL 列点击后在新标签页打开，可独立核对皇冠赔率与赛果。</div>
+      <div class="dc-note">下表是刚刚解密的 zip 内 CSV 的完整内容，共 ${rows.length} 行。当前选中的信号行已加粗。</div>
       <div class="dc-scroll">
         <table class="dc-table-full">
           <thead>${thead}</thead>

@@ -343,6 +343,9 @@ function paintRows() {
     const stakeStr = r.stakeRatio
       ? `${stakeNum}<span class="ratio">${escapeHtml(r.stakeRatio)}</span>`
       : stakeNum;
+    const verifyLink = r.signalId != null
+      ? `<a href="verify.html?id=${encodeURIComponent(r.signalId)}">核验 ↗</a>`
+      : '';
     return `<tr>
       <td class="num">${r.signalId ?? ''}</td>
       <td class="text">${escapeHtml(matchTimeStr)}</td>
@@ -356,6 +359,7 @@ function paintRows() {
       <td class="text">${resultLetter}</td>
       <td class="num">${pnlStr}</td>
       <td class="num">${balStr}</td>
+      <td class="text link">${verifyLink}</td>
     </tr>`;
   }).join('');
 

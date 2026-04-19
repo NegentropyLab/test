@@ -8,10 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260419g">
+  <link rel="stylesheet" href="styles.css?v=20260419h">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.45/dist/zip-full.min.js" defer></script>
-  <script src="verify.js?v=20260419g" defer></script>
+  <script src="verify.js?v=20260419h" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -25,7 +25,6 @@
     <nav class="site-nav">
       <a href="index.html">档案</a>
       <a href="protocol.html">协议</a>
-      <a href="verify.html" class="active">验证</a>
       <a href="about.html">关于</a>
     </nav>
   </header>
@@ -33,14 +32,9 @@
   <article class="doc">
     <h1>在线验证</h1>
 
-    <p class="lede">选择一条信号编号，浏览器独立完成下载、AES 解密、SHA-256 计算、commit 时间戳查询与内容比对。通过后展示解密出的原始信号全文。</p>
+    <p class="lede">浏览器独立完成下载、AES 解密、SHA-256 计算、commit 时间戳查询与内容比对。通过后展示解密出的原始信号全文。</p>
 
-    <div class="verify-controls">
-      <label for="sigSelect">信号编号</label>
-      <select id="sigSelect" disabled><option>正在加载 track_record.csv …</option></select>
-      <button id="verifyBtn" disabled>开始验证</button>
-    </div>
-
+    <div id="sigHeader"></div>
     <div id="verifySteps"></div>
     <div id="verifySummary"></div>
   </article>
