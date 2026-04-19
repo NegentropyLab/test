@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>在线验证 · 负熵实验室信号档案</title>
-  <meta name="description" content="信号档案的在线独立验证工具">
+  <title>在线核验 · 负熵实验室信号档案</title>
+  <meta name="description" content="信号档案的在线独立核验工具">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260419k">
+  <link rel="stylesheet" href="styles.css?v=20260419l">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.45/dist/zip-full.min.js" defer></script>
-  <script src="verify.js?v=20260419k" defer></script>
+  <script src="verify.js?v=20260419l" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -25,12 +25,15 @@
     <nav class="site-nav">
       <a href="index.html">档案</a>
       <a href="protocol.html">协议</a>
+      <a href="how.html">如何核验</a>
       <a href="about.html">关于</a>
     </nav>
   </header>
 
   <article class="doc">
-    <h1>在线验证</h1>
+    <h1>在线核验</h1>
+
+    <p class="verify-prelude">不熟悉这里的机制？先阅读 <a href="how.html">如何核验 ↗</a></p>
 
     <p class="lede">浏览器独立完成下载、AES 解密、SHA-256 计算、commit 时间戳查询与内容比对。通过后展示解密出的原始信号全文。</p>
 
@@ -47,6 +50,7 @@
     <div class="footer-links">
       <a href="index.html">档案</a>
       <a href="protocol.html">协议</a>
+      <a href="how.html">如何核验</a>
       <a href="about.html">关于</a>
     </div>
   </footer>

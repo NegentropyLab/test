@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>如何核验 · 负熵实验室信号档案</title>
+  <meta name="description" content="如何独立核验负熵实验室信号档案">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260419l">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-main-cn">负熵实验室 · 信号档案</div>
+      <div class="brand-main-en">Negentropy Lab · Signal Archive</div>
+      <div class="brand-meta">2026 –</div>
+    </div>
+    <nav class="site-nav">
+      <a href="index.html">档案</a>
+      <a href="protocol.html">协议</a>
+      <a href="how.html" class="active">如何核验</a>
+      <a href="about.html">关于</a>
+    </nav>
+  </header>
+
+  <article class="doc">
+    <h1>如何核验</h1>
+
+    <p>这份档案的核心诉求是：让任何人——无需相信我们、无需联系我们——都能独立确认每一条信号确实是赛前发布的，而不是赛后编造的。</p>
+
+    <p>为此我们选择了一套略显迂回的做法。本页解释其中的原理，以及你如何亲自核验。</p>
+
+    <h2>档案为什么这样运作</h2>
+
+    <p>在博彩相关领域，一份对外展示的成绩单面临一个根本困难：如何证明这些记录是真的赛前发布的，而不是事后挑选有利的结果？任何事后的编辑、删除、修饰，都会让一份成绩单失去全部意义。</p>
+
+    <p>截图、录屏、公众号发帖，都无法解决这个问题——发布者随时可以删除、可以编辑、可以只保留好看的部分。口头承诺更无用。唯一的办法，是把预测提交到一个发布者自己也无法篡改的地方，并让全世界都能查到提交的准确时间。</p>
+
+    <p>为此我们选用了 GitHub。</p>
+
+    <h2>GitHub 是什么</h2>
+
+    <p>GitHub 是全球最大的代码协作平台，由微软运营。全球绝大多数软件工程师在上面存放、协作、维护代码。Linux 操作系统、Python 语言、React 前端框架等几乎所有主流开源项目，都以 GitHub 为官方存档地。许多全球一线的科研机构、NASA、谷歌、特斯拉，也把代码和数据公开托管于此。</p>
+
+    <p>对本档案而言，GitHub 扮演的角色与它原本作为代码平台的用途不同，但利用的是它的同一项核心特性：</p>
+
+    <p>每一次提交都会被自动记录提交时间。任何后续的修改、删除、替换，都会在项目的历史记录中留下公开痕迹，谁都能看到。这份历史记录由 GitHub 系统维护，项目主理人自己无法修改。</p>
+
+    <p>简单说，GitHub 对本档案而言，相当于一个全球公开、发布者本人也无法篡改的公证处。</p>
+
+    <h2>想象一个这样的公证处</h2>
+
+    <p>它接受任何人提交的信封，立刻盖上时间戳封口，把它公开放在一面所有人都能看见的透明墙上。任何事后的改动、删除、替换，都会在墙上留下痕迹，谁都能看见。公证处自己也没有权限偷偷改动任何一个信封。它只做一件事——如实封存，如实公开。</p>
+
+    <p>这正是 GitHub 对本档案而言所扮演的角色。</p>
+
+    <h2>这份档案如何使用 GitHub</h2>
+
+    <p>每一条预测在对应赛事开赛前，被加密封存到一个 zip 文件中，提交到本项目的 GitHub 仓库。GitHub 自动记录这次提交的精确时间戳——通常是赛前数十分钟到数小时。</p>
+
+    <p>赛后，我们把对应的赛果录入 track_record.csv，同时公开该 zip 文件的解密密码。</p>
+
+    <p>从这一刻起，任何人都可以独立核验这条信号：打开 zip 文件，看到我们赛前的原始预测内容，并确认它与事后公开的成绩表格完全一致。</p>
+
+    <h2>你可以做三件事来核验</h2>
+
+    <p>第一，查看封存时间。打开 GitHub 仓库，每一个 zip 文件旁边都标注着它被提交的准确时间。这个时间早于该场赛事的开赛时间。</p>
+
+    <p>第二，用公开密码打开封存文件。使用 track_record.csv 中公开的密码，任何人都能解开对应的 zip 文件，看到我们赛前的原始预测内容。</p>
+
+    <p>第三，确认内容一致。解开后的内容，与 track_record.csv 中对应信号的那一行，必须完全一致——联赛、球队、盘口、赔率、预测方向。如果不一致，整个档案即视为作废。</p>
+
+    <h2>在线核验工具</h2>
+
+    <p>上述三步可以手动完成，但对不熟悉技术的用户而言稍显繁琐。我们提供了一个在线核验工具，把三步全部自动化。你只需要选择任意一条信号，浏览器会在几秒钟内替你完成下载、解密、计算哈希、查询时间戳、对比内容。</p>
+
+    <p>整个过程在你自己的浏览器里运行，不经过任何我们的服务器。你看到核验通过的那一刻，这条信号的赛前存在性就已被独立证实。</p>
+
+    <p><a href="verify.html">打开在线核验 ↗</a></p>
+
+    <h2>延伸阅读</h2>
+
+    <p>若希望了解档案遵循的完整协议——生成规则、结算规则、结构不变量、统计学考量——请参见<a href="protocol.html">档案协议</a>。</p>
+  </article>
+
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <div class="footer-brand-cn">负熵实验室 · 信号档案 · 2026 –</div>
+      <div class="footer-brand-en">Negentropy Lab · Signal Archive</div>
+    </div>
+    <div class="footer-links">
+      <a href="index.html">档案</a>
+      <a href="protocol.html">协议</a>
+      <a href="how.html">如何核验</a>
+      <a href="about.html">关于</a>
+      <a href="https://github.com/NegentropyLab/csv2026" target="_blank" rel="noopener">代码仓库 ↗</a>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

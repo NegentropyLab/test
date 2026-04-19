@@ -15,7 +15,7 @@ async function init() {
   if (!signalId) {
     sigHeader.innerHTML = `
       <div class="sig-header">
-        <div class="sh-empty">请从<a href="index.html">档案页</a>点击记录表"核验"列进入验证。</div>
+        <div class="sh-empty">请从<a href="index.html">档案页</a>点击记录表"核验"列进入。</div>
       </div>`;
     return;
   }
@@ -215,7 +215,7 @@ async function runVerify(signalId) {
   // Final summary + full decrypted CSV
   summaryEl.innerHTML = `
     <div class="verify-summary">
-      <div class="vs-title">信号 ${escapeHtml(signalId)} 的赛前存证已通过独立验证</div>
+      <div class="vs-title">信号 ${escapeHtml(signalId)} 的赛前存证已通过独立核验</div>
       ${commitTimeISO
         ? `<div class="vs-meta">commit 时间戳 · ${escapeHtml(commitTimeISO)}</div>`
         : `<div class="vs-meta">本次未取得 commit 时间戳，其余环节均通过</div>`}

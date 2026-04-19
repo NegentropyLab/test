@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>档案协议 · 负熵实验室</title>
-  <meta name="description" content="信号档案的运行协议与验证方式">
+  <meta name="description" content="信号档案的运行协议与核验方式">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260419k">
+  <link rel="stylesheet" href="styles.css?v=20260419l">
 </head>
 <body>
 <div class="wrap">
@@ -22,6 +22,7 @@
     <nav class="site-nav">
       <a href="index.html">档案</a>
       <a href="protocol.html" class="active">协议</a>
+      <a href="how.html">如何核验</a>
       <a href="about.html">关于</a>
     </nav>
   </header>
@@ -39,7 +40,7 @@
 
     <h2>结算</h2>
 
-    <p>赛果在比赛结束后录入 <code>track_record.csv</code>。同一次 commit 中，对应 zip 文件的解密密码一并公开，使原始信号可被任何人独立验证。</p>
+    <p>赛果在比赛结束后录入 <code>track_record.csv</code>。同一次 commit 中，对应 zip 文件的解密密码一并公开，使原始信号可被任何人独立核验。</p>
 
     <h2>结构不变量</h2>
 
@@ -53,9 +54,9 @@
       </li>
     </ol>
 
-    <h2>验证</h2>
+    <h2>核验</h2>
 
-    <p>验证任一条信号的步骤如下。</p>
+    <p>核验任一条信号的步骤如下。</p>
 
     <ol>
       <li>在 <code>track_record.csv</code> 中定位该信号所在行，记录其对应的 zip 文件名与密码。</li>
@@ -65,7 +66,9 @@
       <li>将其内容与 <code>track_record.csv</code> 中对应行比对。</li>
     </ol>
 
-    <p>提供在线验证工具：<a href="verify.html">在线验证 ↗</a>，无需安装任何软件，浏览器即可独立完成下载、解密、SHA-256 与 commit 时间戳核验。</p>
+    <p>对技术不熟悉的读者，建议先阅读 <a href="how.html">如何核验 ↗</a>，了解档案的核验原理与 GitHub 在其中的角色。</p>
+
+    <p>提供在线核验工具：<a href="verify.html">在线核验 ↗</a>，无需安装任何软件，浏览器即可独立完成下载、解密、SHA-256 计算与 commit 时间戳核验。</p>
 
     <h2>统计学考量</h2>
 
@@ -117,6 +120,7 @@
     </div>
     <div class="footer-links">
       <a href="index.html">档案</a>
+      <a href="how.html">如何核验</a>
       <a href="about.html">关于</a>
       <a href="https://github.com/NegentropyLab/csv2026" target="_blank" rel="noopener">代码仓库 ↗</a>
     </div>
