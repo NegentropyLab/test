@@ -97,9 +97,10 @@ async function runVerify(signalId) {
     if (!entries.length) throw new Error('zip 内无文件');
     const entry = entries[0];
     innerName = entry.filename;
-    csvText = await entry.getData(new zip.TextWriter('utf-8'));
+    // 拿原始字节，避免 text 往返丢 BOM / 改行结尾，导致 SHA 不一致
+    csvBytes = await entry.getData(new zip.Uint8ArrayWriter());
     await reader.close();
-    csvBytes = new TextEncoder().encode(csvText);
+    csvText = new TextDecoder('utf-8').decode(csvBytes);
     addStep('AES 解密', 'ok', `内部文件 ${innerName} · ${formatBytes(csvBytes.length)}`);
   } catch (e) {
     addStep('AES 解密', 'error', `解密失败：${e.message}（密码错误或非 AES 加密）`);

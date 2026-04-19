@@ -224,7 +224,7 @@ p { margin-bottom: 24px; }
 .footer-links a:hover { color: var(--text); }
 
 /* Document pages */
-.doc { max-width: 720px; }
+.doc { max-width: 720px; margin: 0 auto; }
 .doc p { margin-bottom: 28px; }
 .doc ol, .doc ul { margin-bottom: 28px; padding-left: 28px; }
 .doc li { margin-bottom: 12px; }
