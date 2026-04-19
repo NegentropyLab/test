@@ -245,6 +245,14 @@ p { margin-bottom: 24px; }
 
 .invariants li { margin-bottom: 0.8rem; }
 
+.protocol-caveat {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-top: -8px;
+  margin-bottom: 32px;
+}
+
 .protocol-footnote {
   margin-top: 48px;
   padding-top: 20px;
