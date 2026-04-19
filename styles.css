@@ -244,6 +244,12 @@ p { margin-bottom: 24px; }
 }
 
 .invariants li { margin-bottom: 0.8rem; }
+.invariants .li-note {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
 
 .protocol-caveat {
   font-size: 13px;

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260419j">
+  <link rel="stylesheet" href="styles.css?v=20260419k">
 </head>
 <body>
 <div class="wrap">
@@ -48,7 +48,9 @@
     <ol class="invariants">
       <li><strong>数量对应。</strong>track_record.csv 中的每一行都引用 <code>/csv</code> 目录下一个真实存在的 zip 文件；<code>/csv</code> 目录下的每一个 zip 文件都被 track_record.csv 中至少一行引用。不存在"孤儿"——不会有记录却无文件，也不会有文件却未被记录。</li>
       <li><strong>赔率可核验。</strong>信号生成时刻所记录的皇冠赔率，可在第三方赔率历史数据库中独立核验。</li>
-      <li><strong>无事后过滤。</strong>模型产生的每一条信号都被录入档案。信号一经生成并 commit，不会因任何事后信息（包括市场波动、比赛过程、赛果）被从档案中撤除。</li>
+      <li><strong>无事后删改。</strong>信号一经生成并 commit，不会因任何事后信息（包括市场波动、比赛过程、赛果）被从档案中删除或修改。
+        <div class="li-note">任何事后修改、删除、增加都会在仓库的提交历史中留下公开痕迹。</div>
+      </li>
     </ol>
 
     <h2>验证</h2>
