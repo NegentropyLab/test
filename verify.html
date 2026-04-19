@@ -8,10 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260419d">
+  <link rel="stylesheet" href="styles.css?v=20260419e">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.45/dist/zip-full.min.js" defer></script>
-  <script src="verify.js?v=20260419d" defer></script>
+  <script src="verify.js?v=20260419e" defer></script>
 </head>
 <body>
 <div class="wrap">
@@ -34,6 +34,12 @@
     <h1>在线验证</h1>
 
     <p class="lede">选择一条信号编号，浏览器独立完成下载、AES 解密、SHA-256 计算与 GitHub commit 时间戳核验。整个流程不依赖任何后端，所有运算在本地完成。</p>
+
+    <h2>数量对应核验</h2>
+    <p>核对 <code>track_record.csv</code> 中 <code>源文件</code> 列去重后的数量，与仓库 <code>/csv</code> 目录下 zip 文件的实际数量是否一致。</p>
+    <div id="auditPanel" class="audit-panel">正在核验…</div>
+
+    <h2>单条信号验证</h2>
 
     <div class="verify-controls">
       <label for="sigSelect">信号编号</label>
